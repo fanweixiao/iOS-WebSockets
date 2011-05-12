@@ -12,10 +12,11 @@
 
 @protocol WebSocketDelegate
 @required
+-(void)webSocketOnInitialized:(WebSocket*)webSocket;
 -(void)webSocketOnOpen:(WebSocket*)webSocket;
 -(void)webSocketOnClose:(WebSocket*)webSocket;
 -(void)webSocket:(WebSocket*)webSocket onError:(NSError*)error;
--(void)webSocket:(WebSocket*)webSocket onReceive:(NSString*)message;
+-(void)webSocket:(WebSocket*)webSocket onReceive:(NSData*)data;
 @end
 
 @interface WebSocket : NSObject <UIWebViewDelegate> {
@@ -25,8 +26,8 @@
 
 @property(nonatomic, retain) NSObject<WebSocketDelegate> * delegate;
 
--(id)initWithURLString:(NSString*)urlString;
-
+-(void)connect:(NSString*)url_string;
+-(void)disconnect;
 -(void)send:(NSString*)message;
 
 @end
