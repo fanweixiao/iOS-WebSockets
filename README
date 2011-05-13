@@ -1,97 +1,80 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="1038.35">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-    span.Apple-tab-span {white-space:pre}
-  </style>
-</head>
-<body>
-<p class="p1">&lt;html&gt;&lt;body&gt;&lt;script language="javascript" type="text/javascript"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>var websocket;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>var Base64 = {</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>encode : function (input) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var output = "";</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var chr1, chr2, chr3, enc1, enc2, enc3, enc4;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var i = 0;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>input = Base64._utf8_encode(input);</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>while (i &lt; input.length) {</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>chr1 = input.charCodeAt(i++);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>chr2 = input.charCodeAt(i++);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>chr3 = input.charCodeAt(i++);</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>enc1 = chr1 &gt;&gt; 2;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>enc2 = ((chr1 &amp; 3) &lt;&lt; 4) | (chr2 &gt;&gt; 4);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>enc3 = ((chr2 &amp; 15) &lt;&lt; 2) | (chr3 &gt;&gt; 6);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>enc4 = chr3 &amp; 63;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (isNaN(chr2)) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>enc3 = enc4 = 64;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else if (isNaN(chr3)) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>enc4 = 64;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>output = output +</p>
-<p class="p1"><span class="Apple-converted-space">                </span>this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +</p>
-<p class="p1"><span class="Apple-converted-space">                </span>this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>return output;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>},</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>_utf8_encode : function (string) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>string = string.replace(/\r\n/g,"\n");</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var utftext = "";</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var n = 0;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>for (n = 0; n &lt; string.length; n++) {</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>var c = string.charCodeAt(n);</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (c &lt; 128) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>utftext += String.fromCharCode(c);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>else if((c &gt; 127) &amp;&amp; (c &lt; 2048)) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>utftext += String.fromCharCode((c &gt;&gt; 6) | 192);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>utftext += String.fromCharCode((c &amp; 63) | 128);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>utftext += String.fromCharCode((c &gt;&gt; 12) | 224);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>utftext += String.fromCharCode(((c &gt;&gt; 6) &amp; 63) | 128);</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>utftext += String.fromCharCode((c &amp; 63) | 128);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>return utftext;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} <span class="Apple-converted-space">     </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function connect(url) {</p>
-<p class="p1"><span class="Apple-tab-span">	</span>if (websocket) websocket.close();<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>websocket = new WebSocket(url);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>websocket.onopen = function(evt) { window.location = "onopen://"; };</p>
-<p class="p1"><span class="Apple-converted-space">        </span>websocket.onclose = function(evt) {<span class="Apple-converted-space">  </span>window.location = "onclose://"; };</p>
-<p class="p1"><span class="Apple-converted-space">        </span>websocket.onmessage = function(evt) { window.location = "onreceive://" + Base64.encode(evt.data); };</p>
-<p class="p1"><span class="Apple-converted-space">        </span>websocket.onerror = function(evt) { window.location = "onerror://" + Base64.encode(evt.data); };</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</p>
-</body>
-</html>
+<html><body><script language="javascript" type="text/javascript">
+    
+    var websocket;
+    
+    var Base64 = {
+        
+        _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+        
+        encode : function (input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+            
+            input = Base64._utf8_encode(input);
+            
+            while (i < input.length) {
+                
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+                
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+                
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                
+                output = output +
+                this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+                this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+                
+            }
+            
+            return output;
+        },
+        
+        _utf8_encode : function (string) {
+            string = string.replace(/\r\n/g,"\n");
+            var utftext = "";
+            var n = 0;
+            
+            for (n = 0; n < string.length; n++) {
+                
+                var c = string.charCodeAt(n);
+                
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                }
+                else if((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+                else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+                
+            }
+            
+            return utftext;
+        }      
+    };
+    
+    function connect(url) {
+	if (websocket) websocket.close(); 
+
+        websocket = new WebSocket(url);
+        websocket.onopen = function(evt) { window.location = "onopen://"; };
+        websocket.onclose = function(evt) {  window.location = "onclose://"; };
+        websocket.onmessage = function(evt) { window.location = "onreceive://" + Base64.encode(evt.data); };
+        websocket.onerror = function(evt) { window.location = "onerror://" + Base64.encode(evt.data); };
+    };
+    
+    </script></body></html>

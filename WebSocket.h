@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    ReadyStateConnecting = 0,
+    ReadyStateOpen = 1,
+    ReadyStateClosing = 3,
+    ReadyStateClosed = 2,
+} ReadyState;
+
 @class WebSocket;
 
 @protocol WebSocketDelegate
@@ -29,5 +36,6 @@
 -(void)connect:(NSString*)url_string;
 -(void)disconnect;
 -(void)send:(NSString*)message;
+-(ReadyState)readyState;
 
 @end

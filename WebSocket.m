@@ -8,7 +8,7 @@
 
 #import "WebSocket.h"
 
-const NSString * js = @"<html><body><script language=\"javascript\"type=\"text/javascript\">var websocket;var Base64={_keyStr:\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\",encode:function(input){var output=\"\";var chr1,chr2,chr3,enc1,enc2,enc3,enc4;var i=0;input=Base64._utf8_encode(input);while(i<input.length){chr1=input.charCodeAt(i++);chr2=input.charCodeAt(i++);chr3=input.charCodeAt(i++);enc1=chr1>>2;enc2=((chr1&3)<<4)|(chr2>>4);enc3=((chr2&15)<<2)|(chr3>>6);enc4=chr3&63;if(isNaN(chr2)){enc3=enc4=64;}else if(isNaN(chr3)){enc4=64;} output=output+ this._keyStr.charAt(enc1)+this._keyStr.charAt(enc2)+ this._keyStr.charAt(enc3)+this._keyStr.charAt(enc4);} return output;},_utf8_encode:function(string){string=string.replace(/\\r\\n/g,\"\\n\");var utftext=\"\";var n=0;for(n=0;n<string.length;n++){var c=string.charCodeAt(n);if(c<128){utftext+=String.fromCharCode(c);} else if((c>127)&&(c<2048)){utftext+=String.fromCharCode((c>>6)|192);utftext+=String.fromCharCode((c&63)|128);} else{utftext+=String.fromCharCode((c>>12)|224);utftext+=String.fromCharCode(((c>>6)&63)|128);utftext+=String.fromCharCode((c&63)|128);}} return utftext;}};function connect(url){if(websocket)websocket.close();websocket=new WebSocket(url);websocket.onopen=function(evt){window.location=\"onopen://\";};websocket.onclose=function(evt){window.location=\"onclose://\";};websocket.onmessage=function(evt){window.location=\"onreceive://\"+Base64.encode(evt.data);};websocket.onerror=function(evt){window.location=\"onerror://\"+Base64.encode(evt.data);};};</script></body></html>";
+const NSString * js = @"<html><body><script language=\"javascript\"type=\"text/javascript\">var websocket;var Base64={_keyStr:\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\",encode:function(input){var output=\"\";var chr1,chr2,chr3,enc1,enc2,enc3,enc4;var i=0;input=Base64._utf8_encode(input);while(i<input.length){chr1=input.charCodeAt(i++);chr2=input.charCodeAt(i++);chr3=input.charCodeAt(i++);enc1=chr1>>2;enc2=((chr1&3)<<4)|(chr2>>4);enc3=((chr2&15)<<2)|(chr3>>6);enc4=chr3&63;if(isNaN(chr2)){enc3=enc4=64;}else if(isNaN(chr3)){enc4=64;} output=output+ this._keyStr.charAt(enc1)+this._keyStr.charAt(enc2)+ this._keyStr.charAt(enc3)+this._keyStr.charAt(enc4);} return output;},_utf8_encode:function(string){string=string.replace(/\\r\\n/g,\"\\n\");var utftext=\"\";var n=0;for(n=0;n<string.length;n++){var c=string.charCodeAt(n);if(c<128){utftext+=String.fromCharCode(c);} else if((c>127)&&(c<2048)){utftext+=String.fromCharCode((c>>6)|192);utftext+=String.fromCharCode((c&63)|128);} else{utftext+=String.fromCharCode((c>>12)|224);utftext+=String.fromCharCode(((c>>6)&63)|128);utftext+=String.fromCharCode((c&63)|128);}} return utftext;}};function connect(url){if(websocket)websocket.close();websocket=new WebSocket(url);websocket.onopen=function(evt){window.location=\"onopen://\";};websocket.onclose=function(evt){window.location=\"onclose://\";};websocket.onmessage=function(evt){window.location=\"onreceive://\"+Base64.encode(evt.data);};websocket.onerror=function(evt){window.location=\"onerror://\"+Base64.encode(evt.data);};};function readyState() {if(this.readyState != WebSocket.OPEN) return 'OPEN';}</script></body></html>";
 
 static const char _base64EncodingTable[64] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const short _base64DecodingTable[256] = {
@@ -103,12 +103,17 @@ static const short _base64DecodingTable[256] = {
 		}
 	}
     
-    return [[NSData alloc] initWithBytesNoCopy:objResult length:j freeWhenDone:YES];
+    return [[[NSData alloc] initWithBytesNoCopy:objResult length:j freeWhenDone:YES] autorelease];
+}
+
+-(ReadyState)readyState {
+    NSString * readyStr = [webView stringByEvaluatingJavaScriptFromString:@"websocket.readyState"];
+            
+    return [readyStr intValue];
 }
 
 -(void)connect:(NSString*)url_string {
     [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"connect(\"%@\");", url_string]];
-
 }
 
 -(id)init {
